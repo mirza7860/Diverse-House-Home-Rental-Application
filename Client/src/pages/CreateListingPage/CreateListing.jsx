@@ -6,6 +6,7 @@ import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import color from "../../colors/color.js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { IoIosImages } from "react-icons/io";
+import { BiTrash } from "react-icons/bi";
 const CreateListing = () => {
   // Upload drag and drop photos
   const [photos, setPhotos] = useState([]);
@@ -19,8 +20,8 @@ const CreateListing = () => {
     if (!result.destination) return;
 
     const items = Array.from(photos);
-    const [recordedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, recordedItem);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
     setPhotos(items);
   };
@@ -207,7 +208,6 @@ const CreateListing = () => {
                 </div>
               ))}
             </div>
-
             <h3>Add some photos of your place</h3>
             <DragDropContext onDragEnd={handleDragPhotos}>
               <Droppable droppableId="photos" direction="horizontal">
@@ -220,8 +220,8 @@ const CreateListing = () => {
                     {photos.length < 1 && (
                       <>
                         <input
-                          type="file"
                           id="image"
+                          type="file"
                           style={{ display: "none" }}
                           accept="image/*"
                           onChange={handleUploadPhotos}
@@ -230,8 +230,56 @@ const CreateListing = () => {
                         <label htmlFor="image" className="alone">
                           <div className="icon">
                             <IoIosImages />
-                            <p>Upload from your device</p>
                           </div>
+                          <p>Upload from your device</p>
+                        </label>
+                      </>
+                    )}
+
+                    {photos.length >= 1 && (
+                      <>
+                        {photos.map((photo, index) => {
+                          return (
+                            <Draggable
+                              key={index}
+                              draggableId={index.toString()}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <div
+                                  className="photo"
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <img
+                                    src={URL.createObjectURL(photo)}
+                                    alt="place"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemovePhotos(index)}
+                                  >
+                                    <BiTrash />
+                                  </button>
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        <input
+                          id="image"
+                          type="file"
+                          style={{ display: "none" }}
+                          accept="image/*"
+                          onChange={handleUploadPhotos}
+                          multiple
+                        />
+                        <label htmlFor="image" className="together">
+                          <div className="icon">
+                            <IoIosImages />
+                          </div>
+                          <p>Upload from your device</p>
                         </label>
                       </>
                     )}
