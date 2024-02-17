@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
-
+import listRoutes from "./routes/List.js";
 //  Intialization
 
 const app = express();
@@ -21,12 +21,13 @@ app.use(express.static("public"));
 //  Routes
 
 app.use("/auth", authRoutes);
+app.use("/properties", listRoutes);
 
 //  Intializing server with dtatabase
 
 mongoose
-  .connect(process.env.MONGO_URi,{
-    dbName:"Home_For_Rent"
+  .connect(process.env.MONGO_URi, {
+    dbName: "Home_For_Rent",
   })
   .then(() => {
     app.listen(process.env.PORT, () =>

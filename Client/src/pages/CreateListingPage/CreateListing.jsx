@@ -7,7 +7,10 @@ import color from "../../colors/color.js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { IoIosImages } from "react-icons/io";
 import { BiTrash } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const CreateListing = () => {
+  const navigate = useNavigate();
   const [category, setCategory] = useState("");
 
   const [type, setType] = useState("");
@@ -43,9 +46,9 @@ const CreateListing = () => {
     description: "",
     highlight: "",
     highlightDesc: "",
-    price: "",
+    price: 0,
   });
-  console.log(formdescription);
+
   // Handle location
 
   const handleChangeLocation = (e) => {
@@ -98,12 +101,64 @@ const CreateListing = () => {
     setPhotos((prev) => prev.filter((_, index) => index !== indexRemove));
   };
 
+  // Server Handling
+
+  // State
+
+  const creatorId = useSelector((state) => state.user._id);
+
+  const handlePost = async (e) => {
+    e.preventDefault();
+
+    try {
+      const listingForm = new FormData();
+      listingForm.append("creator", creatorId);
+      listingForm.append("category", category);
+      listingForm.append("type", type);
+      listingForm.append("streetAddress", formLocation.streetAddress);
+      listingForm.append("aptSuite", formLocation.aptSuite);
+      listingForm.append("city", formLocation.city);
+      listingForm.append("province", formLocation.province);
+      listingForm.append("country", formLocation.country);
+      listingForm.append("guestCount", guestCount);
+      listingForm.append("bedroomCount", bedroomCount);
+      listingForm.append("bedCount", bedCount);
+      listingForm.append("bathroomCount", bathroomCount);
+      listingForm.append("amenities", amenities);
+      listingForm.append("bathroomCount", bathroomCount);
+      listingForm.append("title", formdescription.title);
+      listingForm.append("description", formdescription.description);
+      listingForm.append("highlight", formdescription.highlight);
+      listingForm.append("highlightDesc", formdescription.highlightDesc);
+      listingForm.append("price", formdescription.price);
+
+      // APPEND EACH SINGLE PHOTO
+
+      photos.forEach((photo) => {
+        listingForm.append("listingPhotos", photo);
+      });
+
+      // Send a post request
+
+      const response = await fetch("http://localhost:8000/properties/create", {
+        method: "POST",
+        body: listingForm,
+      });
+
+      if (response.ok) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("Publish Listing failed", error.message);
+    }
+  };
+
   return (
     <>
       <Navbar />
 
       <div className="create-listing">
-        <form>
+        <form onSubmit={handlePost}>
           {/* Step 1 */}
           <div className="create-listing_step1">
             <h2>Step 1 : Tell us about your place</h2>
