@@ -1,7 +1,10 @@
-import router from "express";
+import Router from "express";
 import multer from "multer";
 import List from "../model/List.js";
-import User from "../model/User.js";
+
+// Configuration
+
+const router = Router();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -94,3 +97,4 @@ router.get("/", async (req, res) => {
       .json({ message: "Fail to fetch lists", error: error.message });
   }
 });
+export default router;

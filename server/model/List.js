@@ -76,6 +76,6 @@ const ListingSchema = new mongoose.Schema({
   },
 });
 
-const List = mongoose.model("Lising", ListingSchema);
+const List = mongoose.model("Listing", ListingSchema);
 
 export default List;

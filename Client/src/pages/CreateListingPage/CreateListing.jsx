@@ -46,7 +46,7 @@ const CreateListing = () => {
     description: "",
     highlight: "",
     highlightDesc: "",
-    price: 0,
+    price:0,
   });
 
   // Handle location
@@ -125,12 +125,11 @@ const CreateListing = () => {
       listingForm.append("bedCount", bedCount);
       listingForm.append("bathroomCount", bathroomCount);
       listingForm.append("amenities", amenities);
-      listingForm.append("bathroomCount", bathroomCount);
       listingForm.append("title", formdescription.title);
       listingForm.append("description", formdescription.description);
       listingForm.append("highlight", formdescription.highlight);
       listingForm.append("highlightDesc", formdescription.highlightDesc);
-      listingForm.append("price", formdescription.price);
+      listingForm.append("price", formdescription.price || 10);
 
       // APPEND EACH SINGLE PHOTO
 
@@ -139,7 +138,7 @@ const CreateListing = () => {
       });
 
       // Send a post request
-
+      console.log(listingForm);
       const response = await fetch("http://localhost:8000/properties/create", {
         method: "POST",
         body: listingForm,
@@ -513,7 +512,7 @@ const CreateListing = () => {
                 placeholder="10"
                 name="price"
                 className="price"
-                value={Number(formdescription.price)}
+                value={formdescription.price}
                 onChange={handleDescripton}
                 required
               />
