@@ -35,6 +35,7 @@ const CreateListing = () => {
 
   const [amenities, setAmenities] = useState([]);
 
+  console.log(amenities);
   // Photos
 
   const [photos, setPhotos] = useState([]);
@@ -46,7 +47,7 @@ const CreateListing = () => {
     description: "",
     highlight: "",
     highlightDesc: "",
-    price:0,
+    price: 0,
   });
 
   // Handle location

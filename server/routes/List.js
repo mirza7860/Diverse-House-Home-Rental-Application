@@ -87,7 +87,7 @@ router.get("/", async (req, res) => {
     if (qCategory) {
       listings = await List.find({ category: qCategory }).populate("creator");
     } else {
-      listings = await List.find();
+      listings = await List.find().populate("creator");
     }
 
     res.status(200).json(listings);
@@ -95,6 +95,19 @@ router.get("/", async (req, res) => {
     res
       .status(400)
       .json({ message: "Fail to fetch lists", error: error.message });
+  }
+});
+
+// Get Single Listing Details
+router.get("/:listingId", async (req, res) => {
+  try {
+    const { listingId } = req.params;
+    const listing = await List.findById(listingId).populate("creator");
+    res.status(202).json(listing);
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Fail to fetch list-details", error: error.message });
   }
 });
 export default router;
